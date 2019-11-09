@@ -76,6 +76,8 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             } else {
                 this.respondWithError("There was an error with the request");
             }
+        } catch (IOException e) {
+            this.respondWithError("There was an error generating the response");
         }
     }
 }
