@@ -33,49 +33,48 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
     
     @Override
     public void run() {
-        // try {
+        try {
             HttpRequest request = HttpRequest.get(this.getUrlString(), this.getParams(), false);
             this.setupSecurity(request);
             request.acceptCharset(CHARSET);
             request.acceptGzipEncoding().uncompress(true);
             request.headers(this.getHeaders());
             int code = request.code();
-            String body = request.body(CHARSET);
-            // JSONObject response = new JSONObject();
-            // this.addResponseHeaders(request, response);
-            // response.put("status", code);
-            // if (code >= 200 && code < 300) {
-            //     response.put("data", body);
-            //     String responseString = response.toString();
-            //     int responseStringLength = responseString.length();
-            //     int chunkSize = 10000; // 10000 chars
-            //     int numCalls = (int) Math.ceil((double) responseStringLength / (double) chunkSize);
-            //     for (int i = 0; i < numCalls; i++) {
-            //         JSONObject message = new JSONObject();
-            //         if (i == numCalls - 1) {
-            //             message.put("end", true);
-            //         }
-            //         message.put("content", responseString.substring(i*chunkSize, Math.min(responseStringLength, (i + 1) * chunkSize)));
-            //         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
-            //         if (i != numCalls - 1) {
-            //             pluginResult.setKeepCallback(true);
-            //         }
-            //         this.getCallbackContext().sendPluginResult(pluginResult);
-            //     }
-            // } else {
-            //     response.put("error", body);
-            //     this.getCallbackContext().error(response);
-            // }
-        // } catch (JSONException e) {
-        //     this.respondWithError("There was an error generating the response");
-        // } catch (HttpRequestException e) {
-        //     if (e.getCause() instanceof UnknownHostException) {
-        //         this.respondWithError(0, "The host could not be resolved");
-        //     } else if (e.getCause() instanceof SSLHandshakeException) {
-        //         this.respondWithError("SSL handshake failed");
-        //     } else {
-        //         this.respondWithError("There was an error with the request");
-        //     }
-        // }
+            InputStream body = request.reader(CHARSET); // This is where the crash happens
+            this.addResponseHeaders(request, response);
+            if (code >= 200 && code < 300) {
+                byte[] data = new byte[10000];
+                int bytesRead = body.read(data);
+                while(bytesRead != -1) {
+                    JSONObject message = new JSONObject();
+                    String bodyPart = new String(data);
+                    message.put("content", bodyPart);
+
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+                    pluginResult.setKeepCallback(true);
+                    this.getCallbackContext().sendPluginResult(pluginResult);
+                    bytesRead = body.read(data);
+                }
+                body.close();
+
+                JSONObject message = new JSONObject();
+                message.put("end", true);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+                this.getCallbackContext().sendPluginResult(pluginResult);
+            } else {
+                response.put("error", body);
+                this.getCallbackContext().error(response);
+            }
+        } catch (JSONException e) {
+            this.respondWithError("There was an error generating the response");
+        } catch (HttpRequestException e) {
+            if (e.getCause() instanceof UnknownHostException) {
+                this.respondWithError(0, "The host could not be resolved");
+            } else if (e.getCause() instanceof SSLHandshakeException) {
+                this.respondWithError("SSL handshake failed");
+            } else {
+                this.respondWithError("There was an error with the request");
+            }
+        }
     }
 }
