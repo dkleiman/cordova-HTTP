@@ -4,7 +4,7 @@
 package com.synconset;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -40,7 +40,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             request.acceptGzipEncoding().uncompress(true);
             request.headers(this.getHeaders());
             int code = request.code();
-            InputStream body = request.reader(CHARSET); // This is where the crash happens
+            InputStreamReader body = request.reader(CHARSET); // This is where the crash happens
             this.addResponseHeaders(request, response);
             if (code >= 200 && code < 300) {
                 byte[] data = new byte[10000];
