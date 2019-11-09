@@ -1,9 +1,9 @@
-#import "CordovaHttpPlugin.h"
+#import "CordovaHttpPluginChunk.h"
 #import "CDVFile.h"
 #import "TextResponseSerializer.h"
 #import "AFHTTPSessionManager.h"
 
-@interface CordovaHttpPlugin()
+@interface CordovaHttpPluginChunk()
 
 - (void)setRequestHeaders:(NSDictionary*)headers forManager:(AFHTTPSessionManager*)manager;
 - (void)setResults:(NSMutableDictionary*)dictionary withTask:(NSURLSessionTask*)task;
@@ -11,7 +11,7 @@
 @end
 
 
-@implementation CordovaHttpPlugin {
+@implementation CordovaHttpPluginChunk {
     AFSecurityPolicy *securityPolicy;
 }
 
@@ -74,7 +74,7 @@
     NSDictionary *headers = [command.arguments objectAtIndex:2];
     [self setRequestHeaders: headers forManager: manager];
    
-    CordovaHttpPlugin* __weak weakSelf = self;
+    CordovaHttpPluginChunk* __weak weakSelf = self;
     manager.responseSerializer = [TextResponseSerializer serializer];
     [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
@@ -100,7 +100,7 @@
     NSDictionary *headers = [command.arguments objectAtIndex:2];
     [self setRequestHeaders: headers forManager: manager];
    
-    CordovaHttpPlugin* __weak weakSelf = self;
+    CordovaHttpPluginChunk* __weak weakSelf = self;
    
     manager.responseSerializer = [TextResponseSerializer serializer];
     [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
@@ -123,9 +123,15 @@
     self.callbackId = command.callbackId;
     NSString *urlString = [command.arguments objectAtIndex:0];
     NSDictionary *parameters = [command.arguments objectAtIndex:1];
+    NSMutableArray *queryItems = [NSMutableArray array];
+    for (NSString *key in parameters) {
+        [queryItems addObject:[NSURLQueryItem queryItemWithName:key value:parameters[key]]];
+    }
+    NSURLComponents *components = [NSURLComponents componentsWithString:urlString];
+    components.queryItems = queryItems;
     NSDictionary *headers = [command.arguments objectAtIndex:2];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url parameters:parameters];
+    NSURL *url = components.URL;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
     [headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [request setValue:obj forHTTPHeaderField:key];
@@ -148,7 +154,7 @@
     NSDictionary *headers = [command.arguments objectAtIndex:2];
     [self setRequestHeaders: headers forManager: manager];
     
-    CordovaHttpPlugin* __weak weakSelf = self;
+    CordovaHttpPluginChunk* __weak weakSelf = self;
     
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager HEAD:url parameters:parameters success:^(NSURLSessionTask *task) {
@@ -180,7 +186,7 @@
     
     [self setRequestHeaders: headers forManager: manager];
     
-    CordovaHttpPlugin* __weak weakSelf = self;
+    CordovaHttpPluginChunk* __weak weakSelf = self;
     manager.responseSerializer = [TextResponseSerializer serializer];
     [manager POST:url parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSError *error;
@@ -223,7 +229,7 @@
         filePath = [filePath substringFromIndex:7];
     }
     
-    CordovaHttpPlugin* __weak weakSelf = self;
+    CordovaHttpPluginChunk* __weak weakSelf = self;
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager GET:url parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         /*
@@ -302,7 +308,7 @@ didReceiveResponse:(NSURLResponse *)response
     didReceiveData:(NSData *)data
 {
     NSString * str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSDictionary *dictionary = @{ content: str };
+    NSDictionary *dictionary = @{ @"content": str };
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
     [pluginResult setKeepCallbackAsBool:YES];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
@@ -312,7 +318,8 @@ didCompleteWithError:(NSError *)error
 {
     if(error == nil)
     {
-        NSDictionary *dictionary = @{ end: YES };
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+        [dictionary setValue:[NSNumber numberWithBool:YES] forKey:@"end"];
         CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     }

@@ -2,7 +2,7 @@
 
 #import <Cordova/CDVPlugin.h>
 
-@interface CordovaHttpPlugin : CDVPlugin
+@interface CordovaHttpPluginChunk : CDVPlugin
 
 @property (nonatomic, strong) NSString* callbackId;
 
