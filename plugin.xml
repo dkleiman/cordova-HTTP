@@ -28,8 +28,8 @@
             </feature>
         </config-file>
 
-        <header-file src="src/ios/CordovaHttpPlugin.h" />
-        <source-file src="src/ios/CordovaHttpPlugin.m" />
+        <header-file src="src/ios/CordovaHttpPluginChunk.h" />
+        <source-file src="src/ios/CordovaHttpPluginChunk.m" />
         
         <header-file src="src/ios/TextResponseSerializer.h" />
         <source-file src="src/ios/TextResponseSerializer.m" />
