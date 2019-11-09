@@ -54,7 +54,11 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                         message.put("end", true);
                     }
                     message.put("content", responseString.substring(i*chunkSize, Math.min(responseStringLength, (i + 1) * chunkSize)));
-                    this.getCallbackContext().success(message);
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+                    if (i != numCalls - 1) {
+                        pluginResult.setKeepCallback(true);
+                    }
+                    this.getCallbackContext().sendPluginResult(pluginResult);
                 }
             } else {
                 response.put("error", body);
