@@ -51,7 +51,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                 for (int i = 0; i < numCalls; i++) {
                     JSONObject message = new JSONObject();
                     if (i == numCalls - 1) {
-                        message.put('end', true);
+                        message.put("end", true);
                     }
                     message.put(responseString.substring(i*chunkSize, Math.min(responseStringLength, (i + 1) * responseStringLength)));
                     this.getCallbackContext().success(message);
