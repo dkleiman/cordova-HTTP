@@ -38,33 +38,33 @@ var http = {
         this.headers[header] = value;
     },
     enableSSLPinning: function(enable, success, failure) {
-        return exec(success, failure, "CordovaHttpPlugin", "enableSSLPinning", [enable]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "enableSSLPinning", [enable]);
     },
     acceptAllCerts: function(allow, success, failure) {
-        return exec(success, failure, "CordovaHttpPlugin", "acceptAllCerts", [allow]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "acceptAllCerts", [allow]);
     },
     validateDomainName: function(validate, success, failure) {
-        return exec(success, failure, "CordovaHttpPlugin", "validateDomainName", [validate]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "validateDomainName", [validate]);
     },
     post: function(url, params, headers, success, failure) {
         headers = mergeHeaders(this.headers, headers);
-        return exec(success, failure, "CordovaHttpPlugin", "post", [url, params, headers]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "post", [url, params, headers]);
     },
     get: function(url, params, headers, success, failure) {
         headers = mergeHeaders(this.headers, headers);
-        return exec(success, failure, "CordovaHttpPlugin", "get", [url, params, headers]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "get", [url, params, headers]);
     },
     getChunked: function(url, params, headers, success, failure) {
         headers = mergeHeaders(this.headers, headers);
-        return exec(success, failure, "CordovaHttpPlugin", "getChunked", [url, params, headers]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "getChunked", [url, params, headers]);
     },
     head: function(url, params, headers, success, failure) {
         headers = mergeHeaders(this.headers, headers);
-        return exec(success, failure, "CordovaHttpPlugin", "head", [url, params, headers]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "head", [url, params, headers]);
     },
     uploadFile: function(url, params, headers, filePath, name, success, failure) {
         headers = mergeHeaders(this.headers, headers);
-        return exec(success, failure, "CordovaHttpPlugin", "uploadFile", [url, params, headers, filePath, name]);
+        return exec(success, failure, "CordovaHttpPluginChunks", "uploadFile", [url, params, headers, filePath, name]);
     },
     downloadFile: function(url, params, headers, filePath, success, failure) {
         /*
@@ -100,7 +100,7 @@ var http = {
             entry.nativeURL = result.file.nativeURL;
             success(entry);
         };
-        return exec(win, failure, "CordovaHttpPlugin", "downloadFile", [url, params, headers, filePath]);
+        return exec(win, failure, "CordovaHttpPluginChunks", "downloadFile", [url, params, headers, filePath]);
     }
 };
 
