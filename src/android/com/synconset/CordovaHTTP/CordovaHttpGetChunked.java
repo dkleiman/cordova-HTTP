@@ -41,7 +41,6 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             request.headers(this.getHeaders());
             int code = request.code();
             InputStream body = request.stream(); // This is where the crash happens
-            this.addResponseHeaders(request, response);
             if (code >= 200 && code < 300) {
                 byte[] data = new byte[10000];
                 int bytesRead = body.read(data);
@@ -62,6 +61,8 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                 PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
                 this.getCallbackContext().sendPluginResult(pluginResult);
             } else {
+                String body = request.body(CHARSET);
+                JSONObject response = new JSONObject();
                 response.put("error", body);
                 this.getCallbackContext().error(response);
             }
