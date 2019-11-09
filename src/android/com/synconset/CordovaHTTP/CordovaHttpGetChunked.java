@@ -33,7 +33,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
     
     @Override
     public void run() {
-        try {
+        // try {
             HttpRequest request = HttpRequest.get(this.getUrlString(), this.getParams(), false);
             this.setupSecurity(request);
             request.acceptCharset(CHARSET);
@@ -66,16 +66,16 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             //     response.put("error", body);
             //     this.getCallbackContext().error(response);
             // }
-        } catch (JSONException e) {
-            this.respondWithError("There was an error generating the response");
-        } catch (HttpRequestException e) {
-            if (e.getCause() instanceof UnknownHostException) {
-                this.respondWithError(0, "The host could not be resolved");
-            } else if (e.getCause() instanceof SSLHandshakeException) {
-                this.respondWithError("SSL handshake failed");
-            } else {
-                this.respondWithError("There was an error with the request");
-            }
-        }
+        // } catch (JSONException e) {
+        //     this.respondWithError("There was an error generating the response");
+        // } catch (HttpRequestException e) {
+        //     if (e.getCause() instanceof UnknownHostException) {
+        //         this.respondWithError(0, "The host could not be resolved");
+        //     } else if (e.getCause() instanceof SSLHandshakeException) {
+        //         this.respondWithError("SSL handshake failed");
+        //     } else {
+        //         this.respondWithError("There was an error with the request");
+        //     }
+        // }
     }
 }
