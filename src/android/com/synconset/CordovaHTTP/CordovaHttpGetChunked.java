@@ -40,7 +40,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             request.acceptGzipEncoding().uncompress(true);
             request.headers(this.getHeaders());
             int code = request.code();
-            // String body = request.body(CHARSET);
+            String body = request.body(CHARSET);
             // JSONObject response = new JSONObject();
             // this.addResponseHeaders(request, response);
             // response.put("status", code);
