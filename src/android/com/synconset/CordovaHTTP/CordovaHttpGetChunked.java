@@ -40,11 +40,12 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             request.acceptGzipEncoding().uncompress(true);
             request.headers(this.getHeaders());
             int code = request.code();
-            InputStream body = request.stream(); // This is where the crash happens
+            InputStream body = request.stream();
             if (code >= 200 && code < 300) {
-                byte[] data = new byte[1024];
-                int bytesRead = body.read(data);
-                while(bytesRead != -1) {
+                int bytesRead = 0;
+                while (bytesRead != -1) {
+                    byte[] data = new byte[8192];
+                    body.read(data);
                     JSONObject message = new JSONObject();
                     String bodyPart = new String(data);
                     message.put("content", bodyPart);
@@ -57,8 +58,6 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                 body.close();
 
                 JSONObject message = new JSONObject();
-                String bodyPart = new String(data);
-                message.put("content", bodyPart);
                 message.put("end", true);
                 PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
                 this.getCallbackContext().sendPluginResult(pluginResult);
