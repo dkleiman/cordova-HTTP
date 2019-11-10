@@ -42,7 +42,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             int code = request.code();
             InputStream body = request.stream();
             if (code >= 200 && code < 300) {
-                byte[] data = new byte[8192];
+                byte[] data = new byte[100000];
                 int bytesRead = body.read(data);
                 while (bytesRead != -1) {
                     JSONObject message = new JSONObject();
@@ -53,7 +53,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                     pluginResult.setKeepCallback(true);
                     this.getCallbackContext().sendPluginResult(pluginResult);
 
-                    data = new byte[8192];
+                    data = new byte[100000];
                     bytesRead = body.read(data);
                 }
                 body.close();
