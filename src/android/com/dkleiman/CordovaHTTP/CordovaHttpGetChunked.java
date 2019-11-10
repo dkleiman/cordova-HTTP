@@ -1,7 +1,7 @@
 /**
  * A HTTP plugin for Cordova / Phonegap
  */
-package com.synconset;
+package com.dkleiman;
 
 import java.io.IOException;
 import java.io.InputStream;
