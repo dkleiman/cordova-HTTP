@@ -42,7 +42,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
             int code = request.code();
             InputStream body = request.stream(); // This is where the crash happens
             if (code >= 200 && code < 300) {
-                byte[] data = new byte[10000];
+                byte[] data = new byte[1024];
                 int bytesRead = body.read(data);
                 while(bytesRead != -1) {
                     JSONObject message = new JSONObject();
