@@ -47,7 +47,7 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                 while (bytesRead != -1) {
                     JSONObject message = new JSONObject();
                     String bodyPart = new String(data);
-                    message.put("content", bodyPart.substring(0, bytesRead));
+                    message.put("content", bodyPart.substring(0, bytesRead).replace("\0", ""));
 
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
                     pluginResult.setKeepCallback(true);
