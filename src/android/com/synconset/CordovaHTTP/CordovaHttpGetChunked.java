@@ -53,8 +53,8 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                     pluginResult.setKeepCallback(true);
                     this.getCallbackContext().sendPluginResult(pluginResult);
 
-                    byte[] newData = new byte[8192];
-                    bytesRead = body.read(newData);
+                    data = new byte[8192];
+                    bytesRead = body.read(data);
                 }
                 body.close();
 
