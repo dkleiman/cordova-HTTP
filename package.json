@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dkleiman/cordova-HTTP.git"
+    "url": "https://github.com/dkleiman/cordova-HTTP.git"
   },
   "author": "",
   "license": "ISC",
