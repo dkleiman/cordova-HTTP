@@ -1,0 +1,19 @@
+{
+  "name": "cordova-plugin-http-dk",
+  "version": "1.2.0",
+  "description": "cordovaHTTP ==================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkleiman/cordova-HTTP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dkleiman/cordova-HTTP/issues"
+  },
+  "homepage": "https://github.com/dkleiman/cordova-HTTP#readme"
+}
