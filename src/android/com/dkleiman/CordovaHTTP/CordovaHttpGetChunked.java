@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Map;
+import java.util.Arrays;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -46,8 +47,8 @@ public class CordovaHttpGetChunked extends CordovaHttp implements Runnable {
                 int bytesRead = body.read(data);
                 while (bytesRead != -1) {
                     JSONObject message = new JSONObject();
-                    String bodyPart = new String(data);
-                    message.put("content", bodyPart.substring(0, bytesRead).replace("\0", ""));
+                    String bodyPart = new String(Arrays.copyOfRange(data, 0, bytesRead));
+                    message.put("content", bodyPart.replace("\0", ""));
 
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
                     pluginResult.setKeepCallback(true);
